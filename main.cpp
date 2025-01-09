@@ -38,9 +38,23 @@ class malhaGrafica {
             int numVertices, numFaces, numEdges;
             ss >> numVertices >> numFaces >> numEdges;
 
-            std::cout <<"quantidade vertices: "<< numVertices <<endl;
-            std::cout <<"quantidade faces: "<< numFaces <<endl;
-            std::cout <<"quantidade edges: "<< numEdges <<endl;
+            // popular vertices
+            listaDeVertices.resize(numVertices);
+            for (int i = 0; i < numVertices; ++i) {
+                file >> listaDeVertices[i].x >> listaDeVertices[i].y >> listaDeVertices[i].z;
+            }
+
+            //popular faces e vertices das faces
+            listaDeFaces.resize(numFaces);
+            for (int i = 0; i < numFaces; ++i) {
+                int numVerticesFace;
+                file >> numVerticesFace ;
+
+                listaDeFaces[i].verticesDaFace.resize(numVerticesFace);
+                for (int j = 0; j < numVerticesFace; ++j) {
+                    file >> listaDeFaces[i].verticesDaFace[j];
+                }
+            }
 
 
 
@@ -48,6 +62,24 @@ class malhaGrafica {
         }
 
         void apresentarDados(){
+            int indiceVertices;
+            //apresentar vertices
+            std::cout << "\nVertices\n\n "<< endl;
+            std::cout << "(identificacao) Vertice: " << "X-Y-Z\n" << endl;
+            for(const auto& vertice : listaDeVertices){
+                std::cout << "Vertice_" << indiceVertices++ << ": "<<vertice.x << "-" << vertice.y << "-" << vertice.z << endl;
+            }
+
+            //apresentar faces e vertices da face
+            std::cout << "\nFaces\n\n";
+            std::cout << "(identificacao) Vertices da Face\n" << std::endl;
+            for (size_t i = 0; i < listaDeFaces.size(); ++i) {
+                std::cout << "Face_" << i << ": ";
+                for (const auto& verticeIndice : listaDeFaces[i].verticesDaFace) {
+                    std::cout << verticeIndice << " ";
+                }
+                std::cout << std::endl;
+            }
 
         };
 };
@@ -57,10 +89,10 @@ class malhaGrafica {
 int main()
 {
     malhaGrafica malha;
-    std::string arquivo = "triangles.off"; // Replace with your OFF file name
+    std::string arquivo = "triangles.off";
 
     if(malha.lerArquivo(arquivo)){
-        std::cout << "arquivo lido com sucesso!" << std::endl;
+        malha.apresentarDados();
 
     }else{
         std::cerr << "arquivo nao encontrado" << std::endl;
@@ -68,3 +100,5 @@ int main()
 
     return 0;
 }
+
+
